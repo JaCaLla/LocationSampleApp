@@ -8,14 +8,17 @@
 import Foundation
 import CoreLocation
 
-class LocationManager: NSObject, ObservableObject {
+class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
+    
+    static let shared = LocationManager()
+    
     private var locationManager = CLLocationManager()
     private let geocoder = CLGeocoder()
     
     @Published var currentLocation: CLLocationCoordinate2D?
     @Published var currentAddress: CLPlacemark?
     
-    override init() {
+    private override init() {
         super.init()
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
@@ -45,9 +48,6 @@ class LocationManager: NSObject, ObservableObject {
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         checkAuthorization()
     }
-}
-
-extension LocationManager: CLLocationManagerDelegate {
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.first {
