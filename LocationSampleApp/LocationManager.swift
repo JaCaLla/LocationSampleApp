@@ -9,7 +9,8 @@ import Foundation
 import CoreLocation
 
 class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
-    
+   
+    @MainActor
     static let shared = LocationManager()
     
     private var locationManager = CLLocationManager()
@@ -22,6 +23,10 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         super.init()
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
+    }
+        
+    func requestLocation() {
+        locationManager.requestLocation()
     }
     
     func checkAuthorization() {
@@ -37,10 +42,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     }
     
-    func requestLocation() {
-        locationManager.requestLocation()
-    }
-    
+    // MARK :- CLLocationManagerDelegate
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("Failed to find user's location: \(error.localizedDescription)")
     }
